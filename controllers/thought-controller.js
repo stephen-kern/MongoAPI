@@ -65,12 +65,13 @@ const thoughtController = {
   },
 
   removeThought({ params }, res) {
-    Thought.findOneAndDelete({ _id: params.id })
+    Thought.findOneAndRemove({ _id: params.id })
       .then((deletedThought) => {
         if (!deletedThought) {
           return res.status(404).json({ message: "No Thought with this id" });
         }
         return User.findOneAndUpdate(
+          { thoughts: params.id},
           { $pull: { thoughts: params.id } },
           { new: true }
         );
